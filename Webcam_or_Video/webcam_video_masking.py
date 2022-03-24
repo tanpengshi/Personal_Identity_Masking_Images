@@ -22,11 +22,6 @@ def webcam_masking():
         faces = net.forward()
         height, width = frame.shape[:2]
 
-        # Set kernel Width and Height of OpenCV Gaussian Blur module. 
-        # The larger the resolution, the larger should the kernel dimensions be
-        kernel_width = (width//5) if (width//5)%2==1 else (width//5)+1
-        kernel_height = (height//5) if (height//5)%2==1 else (height//5)+1
-
             ## Detect faces in frame
         for i in range(faces.shape[2]):
             confidence = faces[0, 0, i, 2]
@@ -35,6 +30,12 @@ def webcam_masking():
                 (x, y, x1, y1) = box.astype("int")
 
                 face = frame[y:y1,x:x1]
+                
+                # Set kernel Width and Height of OpenCV Gaussian Blur module. 
+                # The larger the resolution, the larger should the kernel dimensions be
+                h, w = face.shape[:2]
+                kernel_width = w if w%2==1 else w+1
+                kernel_height = h if h%2==1 else h+1
 
                 # create a mask image of the same shape face, filled with 0s (black color)
                 mask = np.zeros_like(face)

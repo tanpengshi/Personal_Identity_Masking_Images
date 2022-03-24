@@ -18,11 +18,6 @@ def image_masking(image_path:str)->np.array:
 
     d1, d2, d3 = frame.shape
 
-    # Set kernel Width and Height of OpenCV Gaussian Blur module. 
-    # The larger the resolution, the larger should the kernel dimensions be
-    kernel_width = (d2//5) if (d2//5)%2==1 else (d2//5)+1
-    kernel_height = (d1//5) if (d1//5)%2==1 else (d1//5)+1
-
     w = 300
     h = d1/d2*w
 
@@ -39,6 +34,12 @@ def image_masking(image_path:str)->np.array:
         X2 = int(x2/w*d2)
         
         face = frame[Y1:Y2,X1:X2]
+
+        # Set kernel Width and Height of OpenCV Gaussian Blur module. 
+        # The larger the resolution, the larger should the kernel dimensions be
+        h, w = face.shape[:2]
+        kernel_width = w if w%2==1 else w+1
+        kernel_height = h if h%2==1 else h+1
 
         # create a mask image of the same shape face, filled with 0s (black color)
         mask = np.zeros_like(face)
